@@ -1,31 +1,53 @@
 
+# Automatische Inhalts-Verifikation nach Transfer
 
-## Transfer-Seite hinzufuegen
+## Ziel
+Automatisierte Tests erstellen, die sicherstellen, dass alle Sektionen der Seelendialog-App nach einem Transfer korrekt gerendert werden.
 
-Eine neue Seite `/transfer` wird erstellt, die den Prozess beschreibt, wie man ein GitHub-Repository in ein Lovable-Projekt uebertragen kann. Die Seite passt sich dem bestehenden Design (Seelendialog-Stil mit Sage/Forest-Farben, Playfair Display Schrift, Framer Motion Animationen) an.
+## Was wird erstellt
 
-### Was wird gebaut
+### 1. Render-Test fuer die Index-Seite
+Ein Vitest + React Testing Library Test, der prueft:
+- **HeroSection**: Titel "Seelendialog", Untertitel "Raum fuer deine Seele", CTA-Button vorhanden
+- **ReflectionSection**: Alle 4 Reflexionsfragen sichtbar, Textarea und Speichern-Button vorhanden
+- **Footer**: Branding-Text vorhanden
 
-Eine informative Seite mit:
-- Einer Kopfzeile mit Titel und Beschreibung
-- Einer Schritt-fuer-Schritt-Anleitung in Karten-Form (3 Schritte)
-- Einem Hinweis-Bereich zu aktuellen Einschraenkungen
-- Navigation zurueck zur Startseite
+### 2. Komponenten-Tests
+Einzelne Tests fuer jede Sektion:
+- `HeroSection.test.tsx` - Hero-Bild, Texte, Scroll-Indikator
+- `ReflectionSection.test.tsx` - Prompt-Karten, Interaktivitaet (Klick wechselt aktive Frage), Journal-Bereich
+- `Footer.test.tsx` - Footer-Inhalt
 
-### Die 3 Schritte
+## Technische Details
 
-1. **Neues Lovable-Projekt erstellen** - Projekt anlegen und mit GitHub verbinden
-2. **Repository klonen und Code kopieren** - Lokales Klonen beider Repos, Dateien uebertragen
-3. **Push und Sync** - Aenderungen pushen, automatische Synchronisation mit Lovable
+### Neue Dateien
+| Datei | Inhalt |
+|-------|--------|
+| `src/test/pages/Index.test.tsx` | Vollstaendiger Render-Test der Hauptseite mit allen Sektionen |
+| `src/test/components/HeroSection.test.tsx` | Hero-Sektion Detailtests |
+| `src/test/components/ReflectionSection.test.tsx` | Reflexions-Sektion mit Interaktionstests |
+| `src/test/components/Footer.test.tsx` | Footer-Verifikation |
 
-### Technische Aenderungen
+### Abhaengigkeiten
+- `@testing-library/react` und `@testing-library/user-event` muessen installiert werden
+- Framer Motion muss gemockt werden (Animationen stoeren Tests)
+- Das Hero-Bild-Asset muss gemockt werden
 
-1. **Neue Datei: `src/pages/Transfer.tsx`**
-   - Seite mit Framer Motion Animationen (wie HeroSection)
-   - Verwendet bestehende UI-Komponenten (Card, Button)
-   - Responsive Layout mit Tailwind-Klassen
-   - Link zurueck zur Startseite
+### Testbeispiel (Index-Seite)
+```text
+Test: "alle Sektionen rendern nach Transfer"
+  - Rendert Index-Komponente
+  - Prueft: "Seelendialog" Text vorhanden
+  - Prueft: "Raum fuer deine Seele" vorhanden
+  - Prueft: Alle 4 Reflexionsfragen vorhanden
+  - Prueft: Textarea vorhanden
+  - Prueft: Footer-Text vorhanden
+  --> PASS = Transfer erfolgreich
+```
 
-2. **Aenderung: `src/App.tsx`**
-   - Neue Route `/transfer` hinzufuegen, die auf die Transfer-Seite zeigt
-
+### Reihenfolge
+1. Testing-Bibliotheken installieren
+2. Framer Motion Mock einrichten
+3. Komponenten-Tests erstellen
+4. Index-Gesamttest erstellen
+5. Alten Beispieltest entfernen
